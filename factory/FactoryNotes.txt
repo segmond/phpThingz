@@ -1,0 +1,5 @@
+Factory Method pattern is involved with creating "SOMETHING".
+the "SOMETHING" created is a product that is not tied to the class that creates it.
+This maintains loose coupling.
+
+Factory Method should be used when the subclass of an object instantiated can vary.
