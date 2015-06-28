@@ -65,7 +65,7 @@ interface ITarget {
     function requester();
 }
 
-// build an adapter
+// build a class adapter
 class NESToGameboyCartAdapter extends GameboyCartriage implements ITarget {
     private $cart;
     protected $name;
