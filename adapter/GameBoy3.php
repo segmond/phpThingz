@@ -43,7 +43,25 @@ class GameBoy {
 
     public function play() {
         if ($this->cart != null) {
-            echo "Playing " . $this->cart->getName() . "\n";
+            echo "Playing " . $this->cart->getName() . " on gameboy\n";
+        }
+    }
+}
+
+class NES {
+    private $cart;
+    public function insertCart(Cartriage $c) {
+        if ($c->getType() != 'nes') {
+            echo ("incompatible cartriage type\n");
+            $this->cart = null;
+            return;
+        }
+        $this->cart = $c;
+    }
+
+    public function nesplay() {
+        if ($this->cart != null) {
+            echo "Playing " . $this->cart->getName() . " on NES\n";
         }
     }
 }
@@ -86,3 +104,9 @@ echo "\n";
 $adapter = new NEStoGameboyCartAdapter($punchout);
 $gb->insertCart($adapter);
 $gb->play();
+
+// nes
+echo "\n";
+$nes = new NES();
+$nes->insertCart($punchout);
+$nes->nesplay();

@@ -84,4 +84,8 @@ $s = new HorizontalScrollBarDecorator(new VerticalScrollBarDecorator(new SimpleW
 echo $s->draw() . "\n";
 echo $s->getDescription() . "\n";
 
+echo "\n";
+$s = new VerticalScrollBarDecorator(new HorizontalScrollBarDecorator(new SimpleWindow()));
+echo $s->draw() . "\n";
+echo $s->getDescription() . "\n";
 
