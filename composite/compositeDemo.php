@@ -16,6 +16,9 @@ class Document implements File {
     }
 
     public function rename($newName) {
+        if (is_null($this->fileName)) {
+            return;
+        }
         echo "Renaming file $this->fileName to $newName\n";
         $this->fileName = $newName;
     }
@@ -25,6 +28,9 @@ class Document implements File {
     }
 
     public function display() {
+        if (is_null($this->fileName)) {
+            return;
+        }
         echo "File $this->fileName\n";
     }
 }
@@ -40,6 +46,9 @@ class Folder implements File {
     }
 
     public function add(File $fileName) {
+        if (is_null($fileName)) {
+            throw new Exception("Can't add to a non existant directory");
+        }
         $this->folderContent[] = $fileName;
     }
 
@@ -57,6 +66,7 @@ class Folder implements File {
 
     public function delete() {
         $this->fileName = null;
+        $this->folderContent = null;
     }
 
     public function display() {
@@ -72,6 +82,10 @@ class Folder implements File {
 class Program {
     public static function main() {
         $note = new Document('note.txt');
+        $note->display();
+        $note->rename('meeting_notes.txt');
+        $note->display();
+
         $pic = new Document('pic.jpg');
         $mp3 = new Document('music.mp3');
         $rockmp3 = new Document('rockmusic.mp3');
@@ -94,9 +108,11 @@ class Program {
 
         $homeDir->add($codeDir);
 
+        $pic->rename('pic.png');
         $homeDir->display();
         $homeDir->deleteFile($codeDir);
         $homeDir->deleteFile($pic);
+        $homeDir->rename('/usr/home');
         $homeDir->display();
 
     }
