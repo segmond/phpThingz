@@ -10,6 +10,10 @@ class FlyweightInsect {
     public function getName() {
         return $this->name;
     }
+
+    public function crawl() {
+        echo $this->name . " is crawling\n";
+    }
 }
 
 class InsectFactory {
@@ -43,6 +47,10 @@ class bugCreator {
     public function show() {
         echo "Bug number $this->num is of type " . $this->insectType->getName() . "\n";
     }
+
+    public function crawl() {
+        $this->insectType->crawl();
+    }
 }
 
 class Bush {
@@ -63,6 +71,7 @@ class Bush {
     public function listInsects() {
         foreach ($this->insects as $bug) {
             $bug->show();
+            $bug->crawl();
         }
     }
 
