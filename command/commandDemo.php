@@ -51,7 +51,25 @@ class Radio extends Electronics {
 }
 
 /** Another receiver class */
-class Fan {
+class Fan extends Electronics{
+    private $states;
+    private $current_state;
+
+    public function __construct() {
+        $this->states = array('off', 'low', 'medium', 'high');
+        $this->current_state = 0;
+    }
+
+    public function nextTurn() {
+        $next = ($this->current_state++) % count($this->states);
+        $this->{$this->states[$next]}();
+    }
+
+    public function prevTurn() {
+        $prev = ($this->current_state--) % count($this->states);
+        $this->{$this->states[$prev]}();
+    }
+        
     public function low() {
         echo "The fan is blowing low\n";
     }
@@ -64,6 +82,16 @@ class Fan {
     }
     public function off() {
         echo "The fan is off\n";
+    }
+
+    public function turnOn() {
+        $this->current_state=1;
+        $this->low();
+    }
+
+    public function turnOff() {
+        $this->current_state=0;
+        $this->off();
     }
 }
 
@@ -138,5 +166,59 @@ class RadioDemo {
 
 }
 
-LightDemo::main($argv[1]);
-RadioDemo::main($argv[1]);
+//LightDemo::main($argv[1]);
+//RadioDemo::main($argv[1]);
+
+/** rotating command for a rotary switch */
+class RotateRightCommand implements Command {
+    private $device;
+
+    public function __construct(Electronics $device) {
+        $this->device = $device;
+    }
+
+    public function execute() {
+        $this->device->nextTurn();
+    }
+}
+
+/** rotating command for a rotary switch */
+class RotateLeftCommand implements Command {
+    private $device;
+
+    public function __construct(Electronics $device) {
+        $this->device = $device;
+    }
+
+    public function execute() {
+        $this->device->prevTurn();
+    }
+}
+
+
+class FanDemo {
+    public static function main($argv) {
+        array_shift($argv);
+        $fan = new Fan(); // receiver of the command
+        $switchRight = new RotateRightCommand($fan); // command
+        $switchLeft = new RotateLeftCommand($fan);
+
+        $mySwitch = new ASwitch(); // invoker
+        foreach ($argv as $cmd) {
+            switch(strtoupper($cmd)) {
+                case "R":
+                    $mySwitch->execute($switchRight); // execute command
+                    break;
+                case "L":
+                    $mySwitch->execute($switchLeft);
+                    break;
+                default:
+                    die("Argument must be 'R' or 'L'\n");
+            }
+        }
+                
+    }
+
+}
+
+FanDemo::main($argv);
