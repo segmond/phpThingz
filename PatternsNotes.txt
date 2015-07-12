@@ -1,0 +1,89 @@
+Creational Patterns
+
+    Abstract Factory - Provide an interface for creating families of related or
+        dependent objects without specifying their concrete classes
+
+    Factory method - Define an interface for creating a single object.
+
+    Prototype - Specify the kinds of objects to create using a prototypical instance and
+        create new objects by copying this prototype
+
+    Singleton - Ensure a class has only one instance and provide a global point of access
+        to it.
+
+    Builder - Separate the construction of a complex object from its representation, 
+        allowing the same construction process to create various representations.
+        Intent - reduce solution to telescoping constructor anti-pattern, instead of using
+        numerous constructs, use another object, a builder.
+
+    Lazy initialization
+    Object pool
+
+
+Structural Patterns
+
+    Adapter/Wrapper/Translator - Convert the interface of a class into another interface
+        clients expect.  An adapter lets classes work together that could not otherwise
+        because of incompatible interfaces. The original classes don't change.
+
+    Decorater/Wrapper
+        Attach additional responsibilities to an object dynamically keeping the same interface. 
+
+    Bridge - it's used to decouple an abstraction from it's implementation so that the two
+        can vary independently.
+        Intent - used as an alternative to inheritance.
+
+    Composite - compose objects into tree structures to represent part-whole hierarchies.
+        Let's clients treat individual objects and compositions of objects uniformly.
+
+        Make an architectuere where single object instances and collections of these objects
+            are treated uniformly.
+
+    Facade -  a single class that represents an entire subsystem.
+            provide a unified interface to a set of interfaces in a subsystem.
+
+    Flyweight - Use sharing to support large numbers of similar objects efficiently.
+
+    Front Controller -?
+
+    Surroage Design Pattern - See Proxy 
+    Proxy - provide a surrogate or placeholder for another object to control access to it.
+        Might add functionality to the object it's controlling.
+
+        Types
+            Remote Proxy, Virtual Proxy, Protection Proxy
+
+        Usage
+            Add security access to an existing object.
+            Simplify API of complex objects.
+            Provide interface for remote resources, such as a web service or REST resource
+            Adding a thread safe feature to an existing class without changing the existing class code
+
+Behavioral Patterns
+    Chain of responsibility - consists of a source of command objects and a series of 
+        processing objects.  Each processing object contains logic that defines the types
+        of commands objects that it can handle, the rest are passed to the next processing
+        object in the chain.  A mechanism also exists for adding new processing objects
+        to the end of this chain.
+
+    Command  - object behavioral pattern that allows us to achieve complete decoupling between
+        the sender and the receiver.  With decoupling, the sender has no knowledger of the receiver's
+        interface.
+    Interpreter
+    Iterator
+    Mediator
+    Memento
+    Null Object
+
+    Observe / Publish/subscribe - Defines a one to many dependency between objects where
+        a state change in one object results in all its dependents being notified and 
+        updated automatically.
+
+    Servant
+    Specification
+    State
+
+    Strategy - enables an algorithm behavior to be selected at runtime.
+
+    Template Method
+    Visitor
