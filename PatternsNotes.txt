@@ -16,8 +16,10 @@ Creational Patterns
         Intent - reduce solution to telescoping constructor anti-pattern, instead of using
         numerous constructs, use another object, a builder.
 
-    Lazy initialization
-    Object pool
+    Lazy initialization - Delay some operation until the first time it is needed.
+
+    Object pool - Avoid expensive acquision and release of resources by recycling objects that
+        are no longer in use.
 
 
 Structural Patterns
@@ -87,3 +89,31 @@ Behavioral Patterns
 
     Template Method
     Visitor
+
+
+S - Single responsibility principle
+O - Open/closed principle
+L - Liskov subsitution principle
+I - Interface segreation principle
+D - Dependency inversion principle
+
+DRY - Don't repeat yourself
+GRASP (OOP) - General Responsibility Assignment Software Patterns
+KISS - keep it simple stupid. Less is more. Simplicity is the ultimate sophistication.
+YAGNI - You aint gonna need it. Keep it simple, continously refactory, continously automate unit test, continously integrate.
+
+
+ATDD - Acceptance test driven development
+BDD - Behavior driven development
+DDD - Domain driven design
+RERO - Release early, Release often
+
+
+Lean principles
+    1. Eliminate waste
+    2. Amplify learning
+    3. Decide as late as possible
+    4. Deliever as fast as possible
+    5. Empower the team
+    6. Build quality in
+    7. See the whole
