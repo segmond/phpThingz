@@ -57,6 +57,14 @@ abstract class AbstractPgDAO {
     }
 }
 
+/** Transfer object */
+class User {
+    public $id;
+    public $username;
+    public $email;
+    public $age;
+}
+
 /** Interface for UserDAO */
 interface IUserDAO {
     function find($value, $key);
@@ -68,16 +76,28 @@ interface IUserDAO {
     function deleteUser(User $user);
 }
 
+/** Concrete DAO */
 class UserDAO extends AbstractPgDAO implements IUserDAO {
     protected $primaryKey = "id";
     protected $tableName = "public.user";
 
+    public function makeUser($dbres) {
+        $user = new User();
+        $user->id = $dbres['id'];
+        $user->username = $dbres['username'];
+        $user->email = $dbres['email'];
+        $user->age = $dbres['age'];
+        return $user;
+    }
+
     public function findByEmail($email) {
-        return $this->find($email, 'email');
+        $dbres = $this->find($email, 'email');
+        return $this->makeUser($dbres);
     }
 
     public function findByAge($age) {
-        return $this->find($age, 'age');
+        $dbres = $this->find($age, 'age');
+        return $this->makeUser($dbres);
     }
 
     public function insertUser(User $user) {
@@ -87,32 +107,46 @@ class UserDAO extends AbstractPgDAO implements IUserDAO {
     }
 
     public function updateUser(User $user) {
+        if ($user->id == null) {
+            throw new Exception("Cannot update a new object, insert please");
+        }
     }
 
     public function deleteUser(User $user) {
+        if ($user->id != null) {
+            throw new Exception("Cannot delete a new object, insert please");
+        }
     }
         
 }
 
 
-class User {
-    public $id;
-    public $username;
-    public $email;
-    public $age;
+class App {
+    public static function main() {
+        $userDAO = new UserDAO(DBFactory::getDB('testDB'));
+
+        $user = $userDAO->findByEmail('john@john.com');
+        var_dump($user);
+
+        $users = $userDAO->findAll(20, 'age');
+        foreach ($users as $u) {
+            var_dump($userDAO->makeUser($u));
+        }
+
+        $mike = new User();
+        $mike->username = 'tyson';
+        $mike->email = 'mike@tyson.net';
+        $mike->age = 45;
+
+        $userDAO->insertUser($mike);
+    }
 }
 
-$userDAO = new UserDAO(DBFactory::getDB('testDB'));
-$user = $userDAO->findByEmail('ken@ken.com');
+App::main();
 
-var_dump($user);
 
-$users = $userDAO->findAll(20, 'age');
-var_dump($users);
-
-$mike = new User();
-$mike->username = 'tyson';
-$mike->email = 'mike@tyson.net';
-$mike->age = 45;
-
-$userDAO->insertUser($mike);
+/**
+ * http://www.oracle.com/technetwork/java/dataaccessobject-138824.html
+ * http://www.tutorialspoint.com/design_pattern/data_access_object_pattern.htm
+ * http://best-practice-software-engineering.ifs.tuwien.ac.at/patterns/dao.html
+ */
