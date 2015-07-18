@@ -40,20 +40,51 @@ abstract class AbstractPgDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    private function parametize_dict($dict) {
+        $param_data = array();
+        array_walk($dict, function($v, $k) use (&$param_data) 
+                            { 
+                                $param_data[":$k"] = $v; 
+                            }, 
+                    $param_data);
+        return $param_data;
+    }
     public function insert($dict) {
+        array_shift($dict); // take out the NULL $id
+
+        $columns = implode(',', array_keys($dict));
+        $keys = implode(',', array_map(function ($key) { return ":$key"; }, array_keys($dict)));
+
+        $param_data = $this->parametize_dict($dict);
+
+        $sql_query = "INSERT INTO $this->tableName ($columns) VALUES ($keys) RETURNING id"; 
+        $stmt = $this->dbConn->prepare($sql_query);
+        $stmt->execute($param_data);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $res['id'];
     }
 
     public function update($dict) {
+        $id = array_shift($dict); // take out the NULL $id
+        $columns = implode(',', array_keys($dict));
+        $set_params = implode(',', array_map(function ($key) { return "$key = :$key "; }, array_keys($dict)));
+        $param_data = $this->parametize_dict($dict);
+
+        $sql_query = "UPDATE $this->tableName SET $set_params WHERE id = :id";
+        $param_data[':id'] = $id;
+
+        $stmt = $this->dbConn->prepare($sql_query);
+        $stmt->execute($param_data);
     }
+
 
     public function delete($key = NULL)
     {
         if (is_null($key)) {
             $key = $this->primaryKey;
         }
-        $stmt = $this->dbConn->prepare("DELETE $this->tableName WHERE id = $key"); 
+        $stmt = $this->dbConn->prepare("DELETE FROM $this->tableName WHERE id = $key"); 
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
 
@@ -104,18 +135,22 @@ class UserDAO extends AbstractPgDAO implements IUserDAO {
         if ($user->id != null) {
             throw new Exception("Cannot reinsert existing object");
         }
+        $id = $this->insert((array) $user);
+        $user->id = $id;
     }
 
     public function updateUser(User $user) {
         if ($user->id == null) {
             throw new Exception("Cannot update a new object, insert please");
         }
+        $this->update((array) $user);
     }
 
     public function deleteUser(User $user) {
-        if ($user->id != null) {
+        if ($user->id == null) {
             throw new Exception("Cannot delete a new object, insert please");
         }
+        $this->delete($user->id);
     }
         
 }
@@ -128,17 +163,27 @@ class App {
         $user = $userDAO->findByEmail('john@john.com');
         var_dump($user);
 
+        $mike = new User();
+        $mike->username = 'tyson';
+        $mike->email = 'mike@tyson.net';
+        $mike->age = 20;
+
+        $userDAO->insertUser($mike);
+
         $users = $userDAO->findAll(20, 'age');
+
         foreach ($users as $u) {
             var_dump($userDAO->makeUser($u));
         }
 
-        $mike = new User();
-        $mike->username = 'tyson';
-        $mike->email = 'mike@tyson.net';
-        $mike->age = 45;
+        echo str_repeat("*", 80) . "\n";
+        $userDAO->deleteUser($mike);
 
-        $userDAO->insertUser($mike);
+        $user = $userDAO->findByAge(45);
+        var_dump($user);
+        $user->age = 33;
+        $userDAO->updateUser($user);
+
     }
 }
 

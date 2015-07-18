@@ -96,7 +96,8 @@ Behavioral Patterns
         but instead communicate through the mediator.
 
     Memento
-    Null Object
+
+    Null Object - avoid null references by providing a default object.
 
     Observe / Publish/subscribe - Defines a one to many dependency between objects where
         a state change in one object results in all its dependents being notified and 
