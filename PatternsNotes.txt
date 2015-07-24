@@ -88,6 +88,7 @@ Behavioral Patterns
     Strategy - enables an algorithm behavior to be selected at runtime.
 
     Template Method
+
     Visitor - Represent an operation to be peformed on the elements of an object structure. 
 	Visitor let's you define a new operation without changing the classes of the elements on which it operators.
 	Separate an algorithm from the object structure on which it operatos.
