@@ -21,6 +21,8 @@ Creational Patterns
     Object pool - Avoid expensive acquision and release of resources by recycling objects that
         are no longer in use.
 
+    Multiton
+
 
 Structural Patterns
 
@@ -46,7 +48,11 @@ Structural Patterns
 
     Flyweight - Use sharing to support large numbers of similar objects efficiently.
 
-    Front Controller -?
+    ##Front Controller -?
+        http://martinfowler.com/eaaCatalog/frontController.html
+        http://www.oracle.com/technetwork/java/frontcontroller-135648.html
+        http://www.tutorialspoint.com/design_pattern/front_controller_pattern.htm
+        http://www.sitepoint.com/front-controller-pattern-1/
 
     Surroage Design Pattern - See Proxy 
     Proxy - provide a surrogate or placeholder for another object to control access to it.
@@ -59,7 +65,15 @@ Structural Patterns
             Add security access to an existing object.
             Simplify API of complex objects.
             Provide interface for remote resources, such as a web service or REST resource
-            Adding a thread safe feature to an existing class without changing the existing class code
+            Adding a thread safe feature to an existing class without changing the existing 
+            class code 
+
+    #DAO - Data access object, providing some specific operations without exposing details of the 
+        database Because the interface exposed by the DAO to clients does not change when the 
+        underlying data source implementation changes, this allows the DAO to adapt to different 
+        storage schemes without affecting it's clients or business components.  Essentially, the 
+        DAO acts as an adapter between the component and the data source.
+
 
 Behavioral Patterns
     Chain of responsibility - consists of a source of command objects and a series of 
@@ -68,14 +82,24 @@ Behavioral Patterns
         object in the chain.  A mechanism also exists for adding new processing objects
         to the end of this chain.
 
-    Command  - object behavioral pattern that allows us to achieve complete decoupling between
-        the sender and the receiver.  With decoupling, the sender has no knowledger of the receiver's
-        interface.
-    Interpreter
-    Iterator
-    Mediator
-    Memento
-    Null Object
+    #Command  - object behavioral pattern that allows us to achieve complete decoupling between 
+        the sender and the receiver.  With decoupling, the sender has no knowledger of the 
+        receiver's interface.
+
+    Interpreter - Define a mechanism to understand and act upon the grammar, decoupling grammar from underlying expressions.
+
+    Iterator - provide a way to access the elements of an aggreagate object sequentially without
+        exposing its underlying representation.
+
+    ##Mediator - allows loose coupling by encapsulating the way disparte sets of objects interact 
+        and communicate with each other. Objects no longer communicate directly with each other, 
+        but instead communicate through the mediator.
+
+    Memento - Capture and externalize an object's internal state allowing the object to be 
+        restored to this state later. Another way is to just serialize the object. We can also
+        use the Serializable interface.
+
+    Null Object - avoid null references by providing a default object.
 
     Observe / Publish/subscribe - Defines a one to many dependency between objects where
         a state change in one object results in all its dependents being notified and 
@@ -83,15 +107,20 @@ Behavioral Patterns
 
     Servant
     Specification
-    State
+
+    #State - Allows an object to alter its behavior when its internal state changes.   The object 
+        will appear to change its class.
 
     Strategy - enables an algorithm behavior to be selected at runtime.
 
-    Template Method
+
+    #Template Method - define the skelenton of an algorithm in an operation defering some steps 
+        to subclasses.  Template method lets subclasses redfine certain steps of an algorithm 
+        without changing the algorithm's structure.
 
     Visitor - Represent an operation to be peformed on the elements of an object structure. 
-	Visitor let's you define a new operation without changing the classes of the elements on which it operators.
-	Separate an algorithm from the object structure on which it operatos.
+        Visitor let's you define a new operation without changing the classes of the elements on 
+        which it operators.  Separate an algorithm from the object structure on which it operatos.
 
 
 S - Single responsibility principle
