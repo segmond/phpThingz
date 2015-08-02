@@ -113,6 +113,7 @@ Behavioral Patterns
 
     Strategy - enables an algorithm behavior to be selected at runtime.
 
+
     #Template Method - define the skelenton of an algorithm in an operation defering some steps 
         to subclasses.  Template method lets subclasses redfine certain steps of an algorithm 
         without changing the algorithm's structure.
