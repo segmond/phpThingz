@@ -1,5 +1,5 @@
 <?php
-/** Without mediator */
+/** User */
 class User {
     private $groups = array();
     private $mediator;
@@ -22,9 +22,12 @@ class User {
     }
 
     public function leaveGroup(Group $group) {
-        $key = array_search($group, $this->groups, true);
-        if ($key !== false) {
-            unset($this->groups[$key]);
+        if ($this->memberOf($group)) {
+            $key = array_search($group, $this->groups, true);
+            if ($key !== false) {
+                unset($this->groups[$key]);
+            }
+            $this->mediator->delUserFromGroup($this, $group);
         }
     }
 
@@ -69,9 +72,12 @@ class Group {
     }
 
     public function delMember(User $user) {
-        $key = array_search($user, $this->members, true);
-        if ($key !== false) {
-            unset($this->members[$key]);
+        if ($this->hasMember($user)) {
+            $key = array_search($user, $this->members, true);
+            if ($key !== false) {
+                unset($this->members[$key]);
+            }
+            $this->mediator->delUserFromGroup($user, $this);
         }
     }
 
@@ -121,7 +127,7 @@ class UserGroupMediator  {
 
     public function delUserFromGroup(User $user, Group $group) {
         $group->delMember($user);
-        $user->leaveGroup($group->getGroupName());
+        $user->leaveGroup($group);
     }
 }
 
@@ -151,6 +157,8 @@ $adm->addMember($jerry); // can't join this way either
 $jerry->joinGroup($support);
 $jerry->joinGroup($support);
 $dev->addMember($jerry);
+
+$jack->leaveGroup($support);
 
 $jack->showMemberships();
 $larry->showMemberships();
