@@ -14,8 +14,11 @@ class User {
     }
 
     public function joinGroup(Group $group) {
-        $this->groups[] = $group;
-        $this->mediator->GroupAcceptsUser($this, $group);
+        if ($this->mediator->GroupAcceptsUser($this, $group)) {
+            if (!$this->memberOf($group)) {
+                $this->groups[] = $group;
+            }
+        }
     }
 
     public function leaveGroup(Group $group) {
@@ -40,6 +43,7 @@ class User {
 class Group {
     private $members = array();
     private $mediator;
+    private $banlist = array();
 
     public function __construct(UserGroupMediator $mediator, $groupname) {
         $this->mediator = $mediator;
@@ -51,8 +55,17 @@ class Group {
     }
 
     public function addMember(User $user) {
+        if ($this->isBanned($user)) {
+            return false;
+        }
+
+        if ($this->hasMember($user)) {
+            return true;
+        }
+
         $this->members[] = $user;
         $this->mediator->addUserToGroup($user, $this);
+        return true;
     }
 
     public function delMember(User $user) {
@@ -72,6 +85,16 @@ class Group {
             echo "Group:$this->groupname, Member:$user->username\n";
         }
     }
+
+    public function banUser(User $user) {
+        $this->banlist[] = $user;
+    }
+
+    public function isBanned(User $user) {
+        $key = array_search($user, $this->banlist, true);
+        return ($key !== false) ? true : false;
+    }
+
 }
 
 class UserGroupMediator  {
@@ -90,8 +113,9 @@ class UserGroupMediator  {
         $this->users[] = $user;
         $this->groups[] = $group;
         if (! $group->hasMember($user)) {
-            $group->addMember($user);
+            return $group->addMember($user);
         }
+        return true;
     }
 
 
@@ -106,10 +130,13 @@ $ugMediator = new UserGroupMediator();
 $jack = new User($ugMediator, 'jack');
 $larry = new User($ugMediator, 'larry');
 $alex = new User($ugMediator, 'alex');
+$jerry = new User($ugMediator, 'jerry');
 
 $adm = new Group($ugMediator, 'admin');
 $dev = new Group($ugMediator, 'dev');
 $support = new Group($ugMediator, 'support');
+
+$adm->banUser($jerry);
 
 $jack->joinGroup($adm);
 $jack->joinGroup($dev);
@@ -118,10 +145,17 @@ $jack->joinGroup($support);
 $support->addMember($larry);
 $support->addMember($alex);
 
+$jerry->joinGroup($adm); // shouldn't be able to join, banned
+$adm->addMember($jerry); // can't join this way either
+
+$jerry->joinGroup($support);
+$jerry->joinGroup($support);
+$dev->addMember($jerry);
 
 $jack->showMemberships();
 $larry->showMemberships();
 $alex->showMemberships();
+$jerry->showMemberships();
 
 $adm->showMembers();
 $dev->showMembers();
