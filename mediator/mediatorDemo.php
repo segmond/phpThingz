@@ -9,19 +9,23 @@ class User {
         $this->username = $username;
     }
 
-    public function joinGroup($group) {
+    public function getUserName() {
+        return $this->username;
+    }
+
+    public function joinGroup(Group $group) {
         $this->groups[] = $group;
         $this->mediator->GroupAcceptsUser($this, $group);
     }
 
-    public function leaveGroup($group) {
+    public function leaveGroup(Group $group) {
         $key = array_search($group, $this->groups, true);
         if ($key !== false) {
             unset($this->groups[$key]);
         }
     }
 
-    public function memberOf($group) {
+    public function memberOf(Group $group) {
         $key = array_search($group, $this->groups, true);
         return ($key !== false) ? true : false;
     }
@@ -58,7 +62,7 @@ class Group {
         }
     }
 
-    public function isMember(User $user) {
+    public function hasMember(User $user) {
         $key = array_search($user, $this->members, true);
         return ($key !== false) ? true : false;
     }
@@ -74,20 +78,24 @@ class UserGroupMediator  {
     private $users = array();
     private $groups = array();
 
-    public function addUserToGroup($user, $group) {
+    public function addUserToGroup(User $user, Group $group) {
         $this->users[] = $user;
         $this->groups[] = $group;
-        $group->addMember($user);
+        if (! $user->memberOf($group)) {
+            $user->joinGroup($group);
+        }
     }
 
-    public function GroupAcceptsUser($user, $group) {
+    public function GroupAcceptsUser(User $user, Group $group) {
         $this->users[] = $user;
         $this->groups[] = $group;
-        $user->joinGroup($group);
+        if (! $group->hasMember($user)) {
+            $group->addMember($user);
+        }
     }
 
 
-    public function delUserFromGroup($user, $group) {
+    public function delUserFromGroup(User $user, Group $group) {
         $group->delMember($user);
         $user->leaveGroup($group->getGroupName());
     }
@@ -104,17 +112,18 @@ $dev = new Group($ugMediator, 'dev');
 $support = new Group($ugMediator, 'support');
 
 $jack->joinGroup($adm);
-//$ugMediator->addUserToGroup($jack, $adm);
-/*$ugMediator->addUserToGroup($larry, $adm);
-$ugMediator->addUserToGroup($alex, $adm);
-$ugMediator->addUserToGroup($jack, $dev);
-$ugMediator->addUserToGroup($jack, $support);
-*/
+$jack->joinGroup($dev);
+$jack->joinGroup($support);
+
+$support->addMember($larry);
+$support->addMember($alex);
+
+
+$jack->showMemberships();
+$larry->showMemberships();
+$alex->showMemberships();
 
 $adm->showMembers();
-$jack->showMemberships();
-
-$ugMediator->delUserFromGroup($jack, $adm);
-$adm->showMembers();
-$jack->showMemberships();
+$dev->showMembers();
+$support->showMembers();
 

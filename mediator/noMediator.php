@@ -60,33 +60,44 @@ class Group {
     }
 }
 
+// adding members to groups and vice versa is overly complicated
+// it's easy to miss a state
 $jack = new User('jack');
 $larry = new User('larry');
 $alex = new User('alex');
 
 $adm = new Group('admin');
+
 $adm->addMember($jack);
 $jack->joinGroup('admin');
+
+// admin group recognizes larry and alex as members but
+// larry and alex don't know they are members
 $adm->addMember($larry);
 $adm->addMember($alex);
-
 $adm->showMembers();
 
 $dev = new Group('dev');
+
 $dev->addMember($jack);
 $jack->joinGroup('dev');
+
 $dev->addMember($larry);
 $dev->addMember($alex);
 
 $dev->showMembers();
 
 $support = new Group('support');
+
 $support->addMember($jack);
 $jack->joinGroup('support');
+
 $support->addMember($larry);
 $support->addMember($alex);
 
 $support->showMembers();
 
 $jack->showMemberships();
+$larry->showMemberships();
+$alex->showMemberships();
 
