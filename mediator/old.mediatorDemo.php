@@ -14,10 +14,9 @@ class User {
     }
 
     public function joinGroup(Group $group) {
-        if (!$this->memberOf($group)) {
-            $this->groups[] = $group; // assume we can join the group
-            if (!$this->mediator->addUserToGroup($this, $group)) {
-                $this->leaveGroup($group); // we couldn't join
+        if ($this->mediator->GroupAcceptsUser($this, $group)) {
+            if (!$this->memberOf($group)) {
+                $this->groups[] = $group;
             }
         }
     }
@@ -104,12 +103,27 @@ class Group {
 
 }
 
-/** Mediate between the User and Group class in adding and deleting user memberships */
 class UserGroupMediator  {
+    private $users = array();
+    private $groups = array();
+
     public function addUserToGroup(User $user, Group $group) {
-        $user->joinGroup($group);
-        return $group->addMember($user);
+        $this->users[] = $user;
+        $this->groups[] = $group;
+        if (! $user->memberOf($group)) {
+            $user->joinGroup($group);
+        }
     }
+
+    public function GroupAcceptsUser(User $user, Group $group) {
+        $this->users[] = $user;
+        $this->groups[] = $group;
+        if (! $group->hasMember($user)) {
+            return $group->addMember($user);
+        }
+        return true;
+    }
+
 
     public function delUserFromGroup(User $user, Group $group) {
         $group->delMember($user);
@@ -128,7 +142,7 @@ $adm = new Group($ugMediator, 'admin');
 $dev = new Group($ugMediator, 'dev');
 $support = new Group($ugMediator, 'support');
 
-$adm->banUser($jerry); // broken the way it is
+$adm->banUser($jerry);
 
 $jack->joinGroup($adm);
 $jack->joinGroup($dev);
