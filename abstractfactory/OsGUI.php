@@ -21,7 +21,7 @@ class WinButton implements Button {
 
 class WinLabel implements Label {
     function paint() {
-        echo "WinLable\n";
+        echo "WinLabel\n";
     }
 }
 
@@ -43,7 +43,7 @@ class OSXButton implements Button {
 
 class OSXLabel implements Label {
     function paint() {
-        echo "OSXLable\n";
+        echo "OSXLabel\n";
     }
 }
 
@@ -54,6 +54,28 @@ class OSXFactory implements GUIFactory {
 
     public function createLabel() {
         return new OSXLabel();
+    }
+}
+
+class LinuxButton implements Button {
+    function paint() {
+        echo "LinuxButton\n";
+    }
+}
+
+class LinuxLabel implements Label {
+    function paint() {
+        echo "LinuxLabel\n";
+    }
+}
+
+class LinuxFactory implements GUIFactory {
+    public function createButton() {
+        return new LinuxButton();
+    }
+
+    public function createLabel() {
+        return new LinuxLabel();
     }
 }
 
@@ -69,5 +91,5 @@ class Application {
 }
 
 
-$app = new Application(new WinFactory());
 $app = new Application(new OSXFactory());
+//$app = new Application(new LinuxFactory());

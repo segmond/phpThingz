@@ -15,6 +15,7 @@ class SingletonDemo {
     }
 
     public function setRegister($key, $val) {
+        echo "setting $key\n";
         $this->registry[$key] = $val;
     }
 
