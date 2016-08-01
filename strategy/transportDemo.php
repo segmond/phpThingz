@@ -4,6 +4,12 @@ interface TransportStrategy {
     function takeToAirport($person);
 }
 
+class ShuttleStrategy implements TransportStrategy {
+    public function takeToAirport($person) {
+        echo "taking $person to airport with a shuttle, time 10 seconds, price $50,000\n";
+    }
+}
+
 class TaxiStrategy implements TransportStrategy {
     public function takeToAirport($person) {
         echo "Taxi taking $person to airport, time 30 minutes, price $50\n";
@@ -47,7 +53,7 @@ class Tester
         $john = new Person('john', new CityBusStrategy());
         $john->travel();
 
-        $john->setStrategy(new TaxiStrategy());
+        $john->setStrategy(new ShuttleStrategy());
         $john->travel();
 
     }
