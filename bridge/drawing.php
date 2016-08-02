@@ -6,13 +6,21 @@ interface DrawingAPI {
 
 class DrawingAPI1 implements DrawingAPI {
     public function drawCircle($x, $y, $radius) {
-        echo "API 1 at $x:$y radius $radius.\n";
+        echo "API 1 drawing circle at $x:$y radius $radius.\n";
     }
 }
 
 class DrawingAPI2 implements DrawingAPI {
     public function drawCircle($x, $y, $radius) {
-        echo "API 2 at $x:$y radius $radius.\n";
+        echo "API 2 drawing circle at $x:$y radius $radius.\n";
+    }
+}
+class OpenGLAPI implements DrawingAPI {
+    public function drawCircle($x, $y, $radius) {
+        echo "Open GL API drawing circle at $x:$y radius $radius.\n";
+    }
+    public function drawSquare($x, $y, $side) {
+        echo "Open GL API drawing square at $x:$y side $side.\n";
     }
 }
 
@@ -49,11 +57,34 @@ class CircleShape extends Shape {
     }
 }
 
+class SquareShape extends Shape {
+    private $x;
+    private $y;
+    private $radius;
+
+    public function __construct($x, $y, $side,  DrawingAPI $drawingAPI) {
+        parent::__construct($drawingAPI);
+        $this->x = $x;
+        $this->y = $y;
+        $this->side = $side;
+    }
+
+    public function draw() {
+        $this->drawingAPI->drawSquare($this->x, $this->y, $this->side);
+    }
+
+    public function resizeByPercentage($pct) {
+        $this->side *= $pct;
+    }
+}
+
 class Tester {
     public static function main() {
+        $open_gl_api = new OpenGLAPI();
         $shapes = array(
-            new CircleShape(1,3,7, new DrawingAPI1()),
-            new CircleShape(5,7,11, new DrawingAPI2()),
+            new CircleShape(1,3,7, $open_gl_api),
+            new CircleShape(5,7,11, $open_gl_api),
+            new SquareShape(20,20,5, $open_gl_api),
         );
 
         foreach ($shapes as $shape) {
@@ -64,3 +95,4 @@ class Tester {
 }
 
 Tester::main();
+
