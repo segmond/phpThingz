@@ -34,7 +34,7 @@ class GameBoy {
     private $cart;
     public function insertCart(Cartriage $c) {
         if ($c->getType() != 'gameboy') {
-            echo ("incompatible cartriage type\n");
+            echo ("{$c->getType()} cartriage of Game {$c->getName()} is incompatible for gameboy\n");
             $this->cart = null;
             return;
         }
