@@ -1,0 +1,21 @@
+{
+        "name": "Annotation demo",
+        "description": "Annotation demo",
+        "keywords": ["php", "annotation"],
+        "license": "Nada blah blah blah",
+        "authors": [
+                {
+                        "name": "Segmond Yunsai",
+                        "email": "segmond@segmond.com",
+                        "role": "Main Developer"
+                }
+        ],
+        "require": {
+                "doctrine/annotations": ">=1.0.0"
+        },
+        "autoload": {
+                "psr-4": {
+                        "Foo\\": "src/"
+                }
+        }
+}
